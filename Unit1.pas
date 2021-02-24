@@ -67,6 +67,7 @@ procedure TForm1.Button1Click(Sender: TObject);
 begin
 x:=x+1; y:=y+1; z:=z+1;
 Par1:=TParallel.Create;
+Par[x]:=Par1;
 Par1.Init(x,y,z);
 Par1.Show;
 Memo1.Lines.Add('Адрес в памяти объекта, содержащийся в Par1, равен '+IntToStr(integer(Par1)) );
@@ -80,7 +81,12 @@ else form1.Caption:='Объект существует в памяти'
 end;
 
 
-procedure TForm1.Button3Click(Sender: TObject);IntToStr(Par[i].Fa) );
+procedure TForm1.Button3Click(Sender: TObject);
+var i:integer;
+begin
+for i:=1 to 5 do
+Memo1.Lines.Add('Адрес объекта с номером '+IntToStr(i)+' равен '+IntToStr( integer(Par[i]))+' Поле Fa = '+IntToStr(Par[i].Fa) );
+Par[i].Show;
 end;
 
 end.
