@@ -13,6 +13,7 @@ type
     Button3: TButton;
     Memo1: TMemo;
     Button4: TButton;
+    Button5: TButton;
     procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -31,7 +32,7 @@ type
     Fc:word;
     {procedure Init(a,b,c:word);}
     constructor Create(a,b,c:word);
-    function Volume:word;
+    function Volume:word;virtual;
     procedure Show;
   end;
   TBar = class(TParallel)
@@ -39,17 +40,35 @@ type
     FRo:real;
     constructor Create(a,b,c:word; Ro: real);
     function massa:real;
-    procedure Show;
+    function Volume:word;override;
+    //procedure Show;
+  end;
+  TBarSon = class(TBar)
+  public
+  function Volume:word;override;
+  end;
+  TTransport = class
+
+  end;
+  TAutomobile = class (TTransport)
+
+  end;
+  TToyota = class (TAutomobile)
+
   end;
 
 var
   Form1: TForm1;
   Par1:TParallel;
   Bar1:TBar;
+  BarSon1:TBarSon;
   Par:array [1..5] of TParallel;
   x:word=0;
   y:word=0;
   z:word=0;
+  Transport:TTransport;
+  Automobile: TAutomobile;
+  Toyota: TToyota;
 
 implementation
 
@@ -104,14 +123,21 @@ procedure TForm1.Button3Click(Sender: TObject);
   var i:integer;
   begin
     for i:=1 to 5 do
-    Memo1.Lines.Add('Адрес объекта с номером '+IntToStr(i)+' равен '+IntToStr( integer(Par[i]))+' Поле Fa = '+IntToStr(Par[i].Fa) );
+    Memo1.Lines.Add('Адрес объекта с номером '+IntToStr(i)+
+    ' равен '+IntToStr( integer(Par[i]))+
+    ' Поле Fa = '+IntToStr(Par[i].Fa) );
     Par[i].Show;
   end;
 
 procedure TForm1.Button4Click(Sender: TObject);
 begin
+Par1:=TParallel.Create(1,2,3);
 Bar1:=TBar.Create(1,2,3,10.5);
-Bar1.Show;
+BarSon1:=TBarSon.Create(1,2,3,10.5);
+Par1:=Bar1;
+ShowMessage('Плотность – поле FRo= '+ FloatToStr((Par1 as TBar).FRo)
++#10#13+'Масса = ' + FloatToStr((Par1 as TBar).massa) );
+Par1.Show;
 end;
 
 { TBar }
@@ -127,15 +153,36 @@ begin
 result:=FRo*Volume;
 end;
 
-procedure TBar.Show;
+function TBar.Volume: word;
 begin
-ShowMessage('Объем параллелепипеда равен ' + IntToStr(Volume)+#10#13+
-'Ширина – Поле Fa= '+IntToStr(Fa)+#10#13+
-'Длина – Поле Fb= '+IntToStr(Fb) +#10#13+
-'Высота – Поле Fc= '+IntToStr(Fc)+#10#13+
-'Плотность – Поле FRo= '+FloatToStr(FRo)+#10#13+
-'Масса = '+FloatToStr(massa) );
+result:=Fa*Fb*Fc*100;
 end;
+
+//procedure TBar.Show;
+//begin
+//ShowMessage('Объем параллелепипеда равен ' + IntToStr(Volume)+#10#13+
+//'Ширина – Поле Fa= '+IntToStr(Fa)+#10#13+
+//'Длина – Поле Fb= '+IntToStr(Fb) +#10#13+
+//'Высота – Поле Fc= '+IntToStr(Fc)+#10#13+
+//'Плотность – Поле FRo= '+FloatToStr(FRo)+#10#13+
+//'Масса = '+FloatToStr(massa) );
+//end;
+
+{ TBarSon }
+
+function TBarSon.Volume: word;
+begin
+result:=Fa*Fb*Fc*1000;
+end;
+
+begin
+Transport:=TTransport.Create;
+Automobile:=TAutomobile.Create;
+Toyota:= TToyota.Create;
+Transport:= Automobile;
+Transport:= Toyota;
+Automobile:= Toyota;
+//Automobile:= Transport;
 
 end.
 
